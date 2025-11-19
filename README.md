@@ -5,7 +5,6 @@ This v0.1 prototype explores how wearable-exported data (Fitbit CSV/JSON files) 
 
 Future versions will evolve into a full-stack web application with expanded analytics, dashboards, and integrations.
 
----
 
 ## 🚀 Project Goals (v0.1)
 
@@ -17,7 +16,6 @@ Future versions will evolve into a full-stack web application with expanded anal
 - Render simple charts directly in the terminal using **Plotext**  
 - Serve as a proof-of-concept for a future web app version (v1.0+)
 
----
 
 ## 🧰 Tech Stack
 
@@ -28,7 +26,6 @@ Future versions will evolve into a full-stack web application with expanded anal
 - **Pathlib**, **datetime**, and other standard library tools  
 - **Object-oriented Python** to organize dashboard modules and views
 
----
 
 ## 🌱 Why I Built This
 
