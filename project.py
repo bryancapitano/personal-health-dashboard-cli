@@ -2,7 +2,8 @@ import csv
 from datetime import datetime 
 from rich.console import Console
 from rich.table import Table
-from rich import print
+from rich import print as pprint
+import plotext as plt
 
 
 def extract_fitbit_steps(fname: str) -> list:
@@ -29,20 +30,16 @@ def extract_fitbit_steps(fname: str) -> list:
 
 def get_steps_by_day(steps_data: list) -> dict:
     '''
-    Returns a Dict of steps by day
+    Returns a Dict of steps by date 
     
-    Dict Format: 
-    {
-        "day": datetime.day
-        "steps": steps
-    }
+    Dict Format: { datetime.date: steps }
     '''
-    steps_by_day = {} # {day: steps, day: steps, ...}
+    steps_by_day = {} # {date: steps}
     for row in steps_data:
-        day = row['timestamp'].day
-        #print(f"Day: {day}, Steps: {entry['steps']}")
+        date = row['timestamp'].date()
+        #print(f"Date: {date}, Steps: {entry['steps']}")
         # Increment our steps for each day in steps_by_day{}
-        steps_by_day[day] = steps_by_day.get(day, 0) + row['steps']
+        steps_by_day[date] = steps_by_day.get(date, 0) + row['steps']
     return steps_by_day
 
 
@@ -51,14 +48,14 @@ def build_table_of_steps(steps_by_day: dict):
     table.add_column("Day of Month", justify="left", style="cyan", no_wrap=True)
     table.add_column("Step Count", style="magenta")
 
-    for day, steps in steps_by_day.items():
-        table.add_row(f"{day}", f"{steps}")
+    for date in sorted(steps_by_day):
+        table.add_row(f"{date.strftime('%b')} {date.day}", f"{steps_by_day[date]}")
     
     return table
     
 
 def main():
-    # Build List of Steps from a single month of FibBit data
+    # Transform FibBit CSV data -> Python List[]
     month = "./steps_2025-10-01.csv"
     all_steps_data = extract_fitbit_steps(month)
     
@@ -66,10 +63,29 @@ def main():
     steps_by_day = get_steps_by_day(all_steps_data)
     
     # Print a table of the steps by day
-    table = build_table_of_steps(steps_by_day)
-    console = Console()
-    print("\n")
-    console.print(table)
+    # table = build_table_of_steps(steps_by_day)
+    # console = Console()
+    # print("\n")
+    # console.print(table)
+    
+    # Print bar chart of steps by day
+    # Got unpacking idea here: 
+    # https://www.geeksforgeeks.org/python/python-split-dictionary-keys-and-values-into-separate-lists/   
+    dates = []
+    steps = [] 
+    for d, s in sorted(steps_by_day.items()):
+        dates.append(d.day), steps.append(s)
+    
+    # Styling
+    plt.canvas_color("black")
+    plt.axes_color("black")
+    plt.ticks_color("white")
+    plt.frame(False)             # optional: remove border
+
+    # Chart
+    plt.bar(dates, steps)
+    plt.title("Steps by Day: October")
+    plt.show()
     
     
 if __name__ == "__main__":
