@@ -52,6 +52,33 @@ def build_table_of_steps(steps_by_day: dict):
         table.add_row(f"{date.strftime('%b')} {date.day}", f"{steps_by_day[date]}")
     
     return table
+
+
+def plot_bargraph(steps_by_day):
+    ''' Displays bar chart of steps by day '''
+    
+    dates, steps = unpack_days_and_steps(steps_by_day)
+    
+    # Styling
+    plt.canvas_color("black")
+    plt.axes_color("black")
+    plt.ticks_color("white")
+    plt.frame(False)
+
+    # Chart
+    plt.bar(dates, steps)
+    plt.title("Steps by Day: October")
+    plt.show()
+    
+
+def unpack_days_and_steps(steps_by_day):
+    # Got unpacking idea here: 
+    # https://www.geeksforgeeks.org/python/python-split-dictionary-keys-and-values-into-separate-lists/   
+    dates = []
+    steps = [] 
+    for d, s in sorted(steps_by_day.items()):
+        dates.append(d.day), steps.append(s)
+    return dates, steps
     
 
 def main():
@@ -69,23 +96,7 @@ def main():
     # console.print(table)
     
     # Print bar chart of steps by day
-    # Got unpacking idea here: 
-    # https://www.geeksforgeeks.org/python/python-split-dictionary-keys-and-values-into-separate-lists/   
-    dates = []
-    steps = [] 
-    for d, s in sorted(steps_by_day.items()):
-        dates.append(d.day), steps.append(s)
-    
-    # Styling
-    plt.canvas_color("black")
-    plt.axes_color("black")
-    plt.ticks_color("white")
-    plt.frame(False)             # optional: remove border
-
-    # Chart
-    plt.bar(dates, steps)
-    plt.title("Steps by Day: October")
-    plt.show()
+    plot_bargraph(steps_by_day)
     
     
 if __name__ == "__main__":
