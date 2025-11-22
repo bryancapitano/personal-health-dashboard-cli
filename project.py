@@ -4,6 +4,7 @@ from rich.console import Console
 from rich.table import Table
 from rich import print as pprint
 import plotext as plt
+from domain.steps import StepsData
 
 
 def extract_fitbit_steps(fname: str) -> list:
@@ -28,21 +29,6 @@ def extract_fitbit_steps(fname: str) -> list:
     return steps_list
 
 
-def get_steps_by_day(steps_data: list) -> dict:
-    '''
-    Returns a Dict of steps by date 
-    
-    Dict Format: { datetime.date: steps }
-    '''
-    steps_by_day = {} # {date: steps}
-    for row in steps_data:
-        date = row['timestamp'].date()
-        #print(f"Date: {date}, Steps: {entry['steps']}")
-        # Increment our steps for each day in steps_by_day{}
-        steps_by_day[date] = steps_by_day.get(date, 0) + row['steps']
-    return steps_by_day
-
-
 def build_table_of_steps(steps_by_day: dict):
     table = Table(title="Steps by Day: October")
     table.add_column("Day of Month", justify="left", style="cyan", no_wrap=True)
@@ -54,11 +40,9 @@ def build_table_of_steps(steps_by_day: dict):
     return table
 
 
-def plot_bargraph(steps_by_day):
+def plot_bargraph(dates, steps):
     ''' Displays bar chart of steps by day '''
-    
-    dates, steps = unpack_days_and_steps(steps_by_day)
-    
+       
     # Styling
     plt.canvas_color("black")
     plt.axes_color("black")
@@ -72,6 +56,8 @@ def plot_bargraph(steps_by_day):
     
 
 def unpack_days_and_steps(steps_by_day):
+    ''' Breaks dates and steps into seperate Lists '''
+    
     # Got unpacking idea here: 
     # https://www.geeksforgeeks.org/python/python-split-dictionary-keys-and-values-into-separate-lists/   
     dates = []
@@ -84,19 +70,21 @@ def unpack_days_and_steps(steps_by_day):
 def main():
     # Transform FibBit CSV data -> Python List[]
     month = "./steps_2025-10-01.csv"
-    all_steps_data = extract_fitbit_steps(month)
+    # all_steps_data = extract_fitbit_steps(month)
+    steps = StepsData(extract_fitbit_steps(month))
     
     # Aggregate steps by day
-    steps_by_day = get_steps_by_day(all_steps_data)
+    #steps_by_day = get_steps_by_day(all_steps_data)
     
     # Print a table of the steps by day
-    # table = build_table_of_steps(steps_by_day)
+    # table = build_table_of_steps(steps.get_steps_by_day())
     # console = Console()
     # print("\n")
     # console.print(table)
     
     # Print bar chart of steps by day
-    plot_bargraph(steps_by_day)
+    dates, steps = unpack_days_and_steps(steps.get_steps_by_day())
+    plot_bargraph(dates, steps)
     
     
 if __name__ == "__main__":
