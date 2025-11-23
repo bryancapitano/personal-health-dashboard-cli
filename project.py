@@ -1,32 +1,9 @@
-import csv
-from datetime import datetime 
 from rich.console import Console
 from rich.table import Table
 from rich import print as pprint
 import plotext as plt
 from domain.steps import StepsData
-
-
-def extract_fitbit_steps(fname: str) -> list:
-    '''
-    Transform FibBit Steps into -> List of Dicts
-    
-    Dict Format: 
-    {
-        "timestamp": dateobject
-        "steps": steps
-    }
-    '''
-    steps_list = []
-    with open(fname) as file:
-        reader = csv.DictReader(file)
-        for row in reader:
-            # Convert FitBit's timestamp into datetime object
-            dt = datetime.fromisoformat(row['timestamp'])
-            steps = int(row['steps'])
-            step_dict = {"timestamp": dt, "steps": steps}
-            steps_list.append(step_dict)
-    return steps_list
+from data import fitbit_csv_loader as fb
 
 
 def build_table_of_steps(steps_by_day: dict):
@@ -71,7 +48,7 @@ def main():
     # Transform FibBit CSV data -> Python List[]
     month = "./steps_2025-10-01.csv"
     # all_steps_data = extract_fitbit_steps(month)
-    steps = StepsData(extract_fitbit_steps(month))
+    steps = StepsData(fb.extract_fitbit_steps(month))
     
     # Aggregate steps by day
     #steps_by_day = get_steps_by_day(all_steps_data)
