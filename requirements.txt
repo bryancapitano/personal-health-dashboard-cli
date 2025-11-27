@@ -1,3 +1,5 @@
 plotext
+readchar
 requests
 rich
+sevseg
