@@ -4,9 +4,7 @@ from rich.console import Console
 from rich.layout import Layout
 from rich.live import Live
 from rich.panel import Panel
-from rich.align import Align
-from textual_image.renderable.halfcell import Image
-import sevseg
+from readchar import readkey, key  
 from time import sleep
 
 console = Console()
@@ -34,16 +32,20 @@ def make_footer_menu() -> Panel:
             border_style="cyan",
             style="white on blue",
     )
-    return menu
-    
+    return menu  
 
 def run() -> None:
-    
+    ''' 
+    1. Build Dashboard layout 
+    2. Start Event Loop -> Listen for user input
+    '''
     layout = make_layout()
     layout["footer"].update(make_footer_menu())
     
     with Live(layout, refresh_per_second=4, screen=True):   
-        for _ in range(5):
-            sleep(1)
+        
+        while True:
+            k = readkey()
+            if k == "q":
+                return
     
-
