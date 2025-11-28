@@ -4,6 +4,7 @@ from rich.console import Console
 from rich.layout import Layout
 from rich.live import Live
 from rich.panel import Panel
+from rich.align import Align
 from textual_image.renderable.halfcell import Image
 import sevseg
 from time import sleep
@@ -27,9 +28,21 @@ def make_layout() -> Layout:
     return layout
 
 
+def make_footer_menu() -> Panel:
+    menu = Panel(
+            "Menu: (d) Day, (w) Week, (m) Month, (q) Quit",
+            border_style="cyan",
+            style="white on blue",
+    )
+    return menu
+    
+
 def run() -> None:
     
-    with Live(make_layout(), refresh_per_second=4, screen=True):   
+    layout = make_layout()
+    layout["footer"].update(make_footer_menu())
+    
+    with Live(layout, refresh_per_second=4, screen=True):   
         for _ in range(5):
             sleep(1)
     
