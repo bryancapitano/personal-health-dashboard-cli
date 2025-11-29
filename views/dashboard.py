@@ -5,11 +5,15 @@ from rich.layout import Layout
 from rich.live import Live
 from rich.panel import Panel
 from readchar import readkey, key
-from time import sleep
 
 
 class Dashboard:
-
+    MENU = {
+        "day": "Menu: [bold underline](d) Day[/], (w) Week, (m) Month, (q) Quit",
+        "week": "Menu: (d) Day, [bold underline](w) Week[/], (m) Month, (q) Quit",
+        "month": "Menu: (d) Day, (w) Week, [bold underline](m) Month[/], (q) Quit",
+    }
+    
     def __init__(self):
         self.current_view = "day"
         # console = Console()
@@ -32,9 +36,9 @@ class Dashboard:
         )
         return layout
 
-    def make_footer_menu(self) -> Panel:
+    def make_footer_menu(self, view="day") -> Panel:
         menu = Panel(
-            "Menu: (d) Day, (w) Week, (m) Month, (q) Quit",
+            Dashboard.MENU[view],
             border_style="cyan",
             style="white on blue",
         )
@@ -50,3 +54,9 @@ class Dashboard:
                 k = readkey()
                 if k == "q":
                     return
+                elif k== "d":
+                    self.layout["footer"].update(self.make_footer_menu("day"))
+                elif k == "w":
+                    self.layout["footer"].update(self.make_footer_menu("week"))
+                elif k == "m":
+                    self.layout["footer"].update(self.make_footer_menu("month"))
