@@ -5,7 +5,7 @@ from rich import print as pprint
 import plotext as plt
 from domain.steps import StepsData
 from data import fitbit_csv_loader as fb
-from views import dashboard
+from views.dashboard import Dashboard
 
 
 
@@ -28,7 +28,7 @@ def main():
     # dates, steps = unpack_days_and_steps(steps.get_steps_by_day())
     # plot_bargraph(dates, steps)
     
-    dashboard.run()
+    Dashboard().run()
     
     
 def build_table_of_steps(steps_by_day: dict) -> Table:
