@@ -9,9 +9,9 @@ from readchar import readkey, key
 
 class Dashboard:
     MENU = {
-        "day": "Menu: [bold underline](d) Day[/], (w) Week, (m) Month, (q) Quit",
-        "week": "Menu: (d) Day, [bold underline](w) Week[/], (m) Month, (q) Quit",
-        "month": "Menu: (d) Day, (w) Week, [bold underline](m) Month[/], (q) Quit",
+        "d": "Menu: [bold underline](d) Day[/], (w) Week, (m) Month, (q) Quit",
+        "w": "Menu: (d) Day, [bold underline](w) Week[/], (m) Month, (q) Quit",
+        "m": "Menu: (d) Day, (w) Week, [bold underline](m) Month[/], (q) Quit",
     }
     
     def __init__(self):
@@ -36,13 +36,26 @@ class Dashboard:
         )
         return layout
 
-    def make_footer_menu(self, view="day") -> Panel:
+    def make_footer_menu(self, view="d") -> Panel:
         menu = Panel(
             Dashboard.MENU[view],
             border_style="cyan",
             style="white on blue",
         )
         return menu
+    
+    def handle_keypress(self, key) -> str | None:
+        if key == "q":
+            return key
+        elif key == "d":
+            self.layout["footer"].update(self.make_footer_menu(key))
+        elif key == "w":
+            self.layout["footer"].update(self.make_footer_menu(key))
+        elif key == "m":
+            self.layout["footer"].update(self.make_footer_menu(key))
+        else:
+            return None
+        
 
     def run(self) -> None:
         """ Start Event Loop -> Listen for user input """
@@ -51,12 +64,5 @@ class Dashboard:
 
             # https://pypi.org/project/readchar/
             while True:
-                k = readkey()
-                if k == "q":
-                    return
-                elif k== "d":
-                    self.layout["footer"].update(self.make_footer_menu("day"))
-                elif k == "w":
-                    self.layout["footer"].update(self.make_footer_menu("week"))
-                elif k == "m":
-                    self.layout["footer"].update(self.make_footer_menu("month"))
+                if self.handle_keypress(readkey()) == "q": return
+                
