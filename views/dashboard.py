@@ -18,7 +18,7 @@ class Dashboard:
         self.current_view = "day"
         # console = Console()
         self.layout = self.make_layout()
-        self.layout["footer"].update(self.make_footer_menu())
+        self.make_footer_menu()
 
     def make_layout(self) -> Layout:
         """Setup the basic layout"""
@@ -36,26 +36,20 @@ class Dashboard:
         )
         return layout
 
-    def make_footer_menu(self, view="d") -> Panel:
+    def make_footer_menu(self, view="d") -> None:
         menu = Panel(
             Dashboard.MENU[view],
             border_style="cyan",
             style="white on blue",
         )
-        return menu
+        self.layout["footer"].update(menu)
     
     def handle_keypress(self, key) -> str | None:
         if key == "q":
             return key
-        elif key == "d":
-            self.layout["footer"].update(self.make_footer_menu(key))
-        elif key == "w":
-            self.layout["footer"].update(self.make_footer_menu(key))
-        elif key == "m":
-            self.layout["footer"].update(self.make_footer_menu(key))
-        else:
-            return None
-        
+        elif key in ["d", "w", "m"]:
+            self.make_footer_menu(key)
+        return None
 
     def run(self) -> None:
         """ Start Event Loop -> Listen for user input """
